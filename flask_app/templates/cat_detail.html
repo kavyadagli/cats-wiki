@@ -1,0 +1,165 @@
+{% extends "header.html" %}
+{% block content %}
+
+{% if error_msg %}
+<b></b>
+{% endif %}
+
+{% if cat %}
+
+{# Display card for the movie details #}
+<div style="margin: 50px;" class="text-center">
+  <h2 style="color: darksalmon;" >&#128049; {{ cat.name }} </h2>
+</div>
+
+
+<div class="row">
+	<div class="col">
+			<br>
+			<br>
+	        <img width="200px" height="200px" src="{{ image.url }}" class="cat" alt="{{ cat.name }}">
+	        <div class="row">
+	        	<div class ="col-md-12">
+	        		<br>
+	        		<a href='{{ url_for('features.cat_detail', cat_name=cat.name) }}' ><button>New Image &#128062;</button></a>
+	        	</div>
+	        </div>
+    </div>
+
+    <div class="col">
+	    <br>
+	      <h6 style="color: darksalmon">Cat Stats ^_^</h6>
+	      {% if ratings %}
+	      <div>
+	        {% for key, value in ratings.items() %}
+	          <div>
+	              <b style = "color: grey;">
+	                {{ key }}:
+	                {% for _ in value.0 %}
+	                  &starf;
+	                {% endfor %}
+	                {% for num in value.1 %}
+	                  &star;
+	                {% endfor %}
+	              </b>
+	          </div>
+	        {% endfor %}
+	      </div>
+	    {% endif %}
+	    <b style = "color: grey;">Origin: {{ cat.origin }}</b>
+	    <br><br>
+
+	  <h6 style="color: darksalmon">More Information</h6>
+	  <p><a  style="color: #76D7C4" href={{ cat.wikipedia_url }}><b>Wikipedia</b></a></p>
+	  <p><a  style="color: #76D7C4" href={{ cat.vetstreet_url }}><b>VetStreet</b></a></p>
+  	</div>
+
+</div>
+<br>
+<br>
+
+
+
+{# Reviews #}
+<div class="row">
+  <div class="col-md-12">
+    <h1> Comments <small class="float-right">{{ reviews|length }} Comments</small></h1>
+    <ul class="media-list">
+      {% for review in reviews %}
+      <li class="media review-item">
+        <img class="mr-3 comment-pic" src="data:image/png;base64,{{review.image}}" alt="">
+        <div class="media-body">
+          <span class="float-right">
+            <small>{{ review.date }}</small>
+          </span>
+          <a href="{{ url_for('users.user_detail', username=review.username) }}">
+            <strong>@{{ review.username }}</strong>
+          </a>
+          <p>
+            {{ review.content }}
+          </p>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% if current_user.is_authenticated %}
+{# Movie review submission form #}
+<div class="row">
+  <div class="col">
+    <form method="POST" action="">
+      {{ form.csrf_token }}
+      <div class="form-group">
+        {{ form.text.label }}
+        {{ form.text(class="form-control") }}
+
+        {% if form.text.errors %}
+        <div class="alert alert-warning" role="alert">
+          {% for error in form.text.errors %}
+          <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+      </div>
+      {{ form.submit(class="form-control") }}
+    </form>
+  </div>
+</div>
+{% else %}
+
+<div class="row">
+	<div class="col">
+		<b style = "color: darksalmon;">
+			Looks like you're not signed in
+			<br>
+		</b>
+		<b style = "color: darksalmon;">
+			<a href="{{ url_for('users.login') }}" style="color:#76D7C4">Login to comment!</a>
+		</b>
+	</div>
+</div>
+<br>
+<br>
+{% endif %}
+<br>
+{% endif %}
+
+{% if current_user.is_authenticated %}
+<div class="row">
+    <div class="col" style="color:darksalmon">
+        <form action="" method="post" enctype="multipart/form-data">
+            {{ picform.csrf_token }}
+            <div class="form-group">
+                {{ picform.new_pic.label(class="form-control-label") }}
+                {{ picform.new_pic(class="form-control form-control-lg") }}
+
+                {% if picform.new_pic.errors %}
+                <div class="alert alert-warning" role="alert">
+                    {% for error in picform.new_pic.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ picform.submit(class="form-control form-control-lg") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% else %}
+<div class="row">
+	<div class="col">
+		<b style = "color: darksalmon;">
+			<a href="{{ url_for('users.login') }}" style="color:#76D7C4">Login to Propose Your Own Image!</a>
+		</b>
+	</div>
+</div>
+<br>
+<br>
+{% endif %}
+
+{% endblock content %}

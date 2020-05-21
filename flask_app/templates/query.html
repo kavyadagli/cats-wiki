@@ -1,0 +1,32 @@
+{% extends "header.html" %}
+{% block content %}
+{% if error_msg %}
+<div class="container-fluid">
+	<br>
+	<h3><a style="color: darksalmon;">We currently don't have information for this breed or it doesn't exist. Try a different breed!</a></h3>
+    <a href={{ url_for('features.index') }}> Return to search </a>
+</div>
+
+{% endif %}
+
+<div class="container-fluid">
+    <br>
+    {% for result in results %}
+    <div class="media">
+        <!--<img src="{{ result.poster_url }}" class="mr-3 movie" alt="missing">-->
+        <div class="media-body">
+
+        {% if result.description|length > 0 %}
+        	<h5>&#128049; <a style="color: darksalmon;" href="{{ url_for('features.cat_detail', cat_name=result.name) }}">{{ result.name }}</a></h5>
+            <p>{{ result.description }}</p>
+        {% else %}
+        	<h5>&#128049; <a style="color: #BDC3C7;">{{ result.name }}</a></h5>
+            <p>We don't have much information on this breed, but still a very cute cat!<br>
+            Check back later for updates!</p>
+
+        {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
