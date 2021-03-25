@@ -39,7 +39,7 @@ pyotp==2.3.0
 python-dateutil==2.7.5
 python-dotenv==0.12.0
 pytz==2018.7
-PyYAML==3.13
+PyYAML==5.4
 qrcode==6.1
 requests==2.23.0
 scikit-learn==0.20.2
